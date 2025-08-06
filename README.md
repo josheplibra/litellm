@@ -1,3 +1,5 @@
+# For Gemini CLI (Code Assist) Provider, see [this guide](https://github.com/josheplibra/litellm/blob/main/docs/my-website/docs/tutorials/provider_gemini_cli.md).
+
 <h1 align="center">
         🚅 LiteLLM
     </h1>
