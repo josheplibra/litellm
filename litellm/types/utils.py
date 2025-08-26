@@ -1618,7 +1618,7 @@ class ImageResponse(OpenAIImageResponse, BaseLiteLLMOpenAIResponseObject):
 
     usage: Optional[ImageUsage] = None  # type: ignore
     """
-    Users might use litellm with older python versions, we don't want this to break for them. 
+    Users might use litellm with older python versions, we don't want this to break for them.
     Happens when their OpenAIImageResponse has the old OpenAI usage class.
     """
 
@@ -1910,6 +1910,7 @@ class StandardLoggingMetadata(StandardLoggingUserAPIKeyMetadata):
     vector_store_request_metadata: Optional[List[StandardLoggingVectorStoreRequest]]
     applied_guardrails: Optional[List[str]]
     usage_object: Optional[dict]
+    cold_storage_object_key: Optional[str]  # S3/GCS object key for cold storage retrieval
 
 
 class StandardLoggingAdditionalHeaders(TypedDict, total=False):
@@ -2323,11 +2324,14 @@ class LlmProviders(str, Enum):
     ASSEMBLYAI = "assemblyai"
     GITHUB_COPILOT = "github_copilot"
     SNOWFLAKE = "snowflake"
+    GRADIENT_AI = "gradient_ai"
     LLAMA = "meta_llama"
     NSCALE = "nscale"
     PG_VECTOR = "pg_vector"
     HYPERBOLIC = "hyperbolic"
     RECRAFT = "recraft"
+    AIML = "aiml"
+    COMETAPI = "cometapi"
     OCI = "oci"
     AUTO_ROUTER = "auto_router"
     DOTPROMPT = "dotprompt"
@@ -2351,6 +2355,17 @@ class LiteLLMLoggingBaseClass:
         self, original_response, input=None, api_key=None, additional_args={}
     ):
         pass
+
+
+class TokenCountResponse(LiteLLMPydanticObjectBase):
+    total_tokens: int
+    request_model: str
+    model_used: str
+    tokenizer_type: str
+    original_response: Optional[dict] = None
+    """
+    Original Response from upstream API call - if an API call was made for token counting
+    """
 
 
 class CustomHuggingfaceTokenizer(TypedDict):
